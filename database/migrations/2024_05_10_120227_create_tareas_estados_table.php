@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tareas_estados', function (Blueprint $table) {
             $table->foreignId('tarea_id')->references('id')->on('tareas');
             $table->foreignId('estado_id')->references('id')->on('estados');
+            $table->foreignId('asignado_por')->references('id')->on('users');
             $table->date('fecha');
 
             $table->primary(['tarea_id', 'estado_id']);

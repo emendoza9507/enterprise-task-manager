@@ -12,7 +12,7 @@ class TareaController extends Controller
     }
 
     public function asignadas(Request $request) {
-        $tareas = Tarea::where('responsabe', auth()->user()->id)->paginate();
+        $tareas = Tarea::with('responsable:id,name')->where('creada_por', auth()->user()->id)->paginate(10);
 
         return response()->json($tareas);
     }
