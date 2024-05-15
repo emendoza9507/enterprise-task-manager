@@ -12,7 +12,7 @@ const StyledTextField = styled(({key, ...props}) => (
     '& > input': { boxShadow: 'none' }
 }))
 
-export default function SelectUser({ users, label, multiple }) {
+export default function SelectUser({ users, label, onChange, multiple }) {
 
 
     return (
@@ -24,6 +24,7 @@ export default function SelectUser({ users, label, multiple }) {
             autoHighlight
             getOptionLabel={(option) => option.name}
             getOptionKey={(option) => option.id}
+            onChange={(_, v) => onChange && onChange(v)}
             renderOption={({key, ...props}, option) => (
                 <Box key={key} component="li" sx={{ '& > .MuiAvatar-root': { mr: 2, flexShrink: 0 } }} {...props}>
                     <Avatar/>

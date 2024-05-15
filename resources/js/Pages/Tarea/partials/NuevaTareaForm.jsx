@@ -5,6 +5,7 @@ import axios from "axios";
 import SelectUser from "./SelectUser";
 import { DateTimePicker, LocalizationProvider, PickersDay } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { useForm } from "@inertiajs/react";
 
 const StyledDay = styled(PickersDay)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius
@@ -23,6 +24,11 @@ const StyledTextField = styled((props) => (
 export default function NuevaTareaForm() {
 
     const [trabajadores, setTrabajadores] = useState([]);
+    const { data, post, setData } = useForm({
+        responsable: '',
+        descripcion: '',
+        fecha_cumplimiento: ''
+    })
 
     useEffect(() => {
         axios('/api/v1/usuario/trabajadores')
@@ -31,19 +37,33 @@ export default function NuevaTareaForm() {
             })
     }, []);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post('/tareas', {
+            onSuccess() {
+
+            }
+        })
+    }
+
     return (
         <Box
             component="form"
             noValidate
             autoComplete="off"
+            onSubmit={handleSubmit}
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-                <SelectUser label="Responsable" users={trabajadores} />
+                <SelectUser
+                    label="Responsable" users={trabajadores}
+                    onChange={(v) => setData('responsable', v ? v.id : null)} />
 
                 <StyledTextField
                     label="Descripcion"
                     variant="filled"
+                    value={data.descripcion}
+                    onChange={(e) => setData('descripcion', e.target.value)}
                     multiline
                 />
 
@@ -58,11 +78,12 @@ export default function NuevaTareaForm() {
                         }
                     }}
                     sx={{ width: '100%' }}
+                    onChange={(v) => setData('fecha_cumplimiento', v)}
                 />
 
                 <SelectUser label="Participantes" multiple users={trabajadores} />
 
-                <Button sx={{ mt: 3 }} variant="contained">Crear</Button>
+                <Button type="submit" sx={{ mt: 3 }} variant="contained">Crear</Button>
             </LocalizationProvider>
         </Box>
     )
